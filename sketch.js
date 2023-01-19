@@ -187,7 +187,7 @@ class Cat {
 
 let cat;
 
-let background_color = background_colors[0];
+let background_color = background_colors.pop();
 let background_change_time = 0;
 
 let prev_m;
