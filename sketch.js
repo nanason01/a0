@@ -274,7 +274,7 @@ function draw() {
     // and I don't want to deal with any "time-passed-during-prog"-bugs
     const mil = millis();
     const sec = second();
-    const min = 0; // minute();
+    const min = minute();
     const hou = hour();
 
     // update annoying background at somewhat random intervals
