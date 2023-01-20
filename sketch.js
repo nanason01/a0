@@ -181,6 +181,7 @@ class Cat {
 
         // extend trail
         let draw_trail_col = function(x, y) {
+	    noStroke();
             fill(red.r, red.g, red.b);
             rect(x, y, 40, 15);
             fill(orange.r, orange.g, orange.b);
