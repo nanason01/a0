@@ -10,7 +10,7 @@ The background color changes two times per second,
 the cat oscillates once per second,
 and I couldn't decide whether I liked the guidelines or not,
 so you can click to enable minute indicators.
-It also flies in and out and the change of each minute.
+It also flies in and out at the change of each minute.
 
 Enjoy!
 
