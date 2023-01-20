@@ -5,7 +5,7 @@ This is my silly clock.
 
 The x position represents the seconds,
 the y position the minutes (moving up each minute),
-and the number of sprinkles is the hour.
+and the number of sprinkles and rainbow segments are the hour.
 The background color changes two times per second,
 the cat oscillates once per second,
 and I couldn't decide whether I liked the guidelines or not,
@@ -156,6 +156,27 @@ class Cat {
         rect(x + 145, y + 15, 50, 5);
         rect(x + 205, y + 25, 5, 5);
 
+        // erase existing trail
+        let erase_entire_trail = function(x, y) {
+            fill(background_color.r, background_color.g, background_color.b);
+            rect(x, y, 95, 100);
+            rect(x + 95, y, 30, 35);
+            rect(x + 115, y + 35, 10, 5);
+            rect(x + 120, y + 40, 5, 5);
+            rect(x + 95, y + 50, 5, 5);
+            rect(x + 95, y + 55, 10, 5);
+            rect(x + 95, y + 60, 15, 5);
+            rect(x + 95, y + 65, 25, 20);
+            rect(x + 120, y + 70, 5, 10);
+            rect(x + 95, y + 85, 20, 15);
+        }
+
+        // clean up trail for extension
+        let clean_trail = function(x, y) {
+            fill(background_color.r, background_color.g, background_color.b);
+            rect(x, y, 90, 100);
+        }
+
         // extend trail
         let draw_trail_col = function(x, y) {
             fill(red.r, red.g, red.b);
@@ -171,22 +192,28 @@ class Cat {
             fill(purple.r, purple.g, purple.b);
             rect(x, y + 75, 40, 15);
         }
-
-        let curr_x = x - 30 + 40;
-        let y_up = true;
         
-        // draw a bunch of trailing columns each time, then translate them
-        for (
-            let x_offset = 0, y_up = false; 
-            x_offset < 800;
-            x_offset += 40, y_up = !y_up) 
-        {
-            draw_trail_col(x - 30 - x_offset, y + 5 + (y_up ? 5 : 0));
-        }
-
-        // draw each sprinkle
+        // draw a sprinkle for each hour
         for (let sprinkle of this.#sprinkles) {
             sprinkle.draw(x, y);
+        }
+
+        // draw as many trails as there are hours currently
+        // special case for 0: we need to clean everything
+        if (this.#sprinkles.length == 0) {
+            erase_entire_trail(x, y);
+            return;
+        }
+        
+        // normal case: clean all but the first trail,
+        // then fill in trail 2 - h for each hour
+        clean_trail(x, y);
+        for (
+            let hou = 1; hou < this.#sprinkles.length; hou++) 
+        {
+            const x_offset = hou * 40;
+            const y_up = hou % 2 == 0;
+            draw_trail_col(x + 90 - x_offset, y + 5 + (y_up ? 5 : 0));
         }
     }
 
@@ -271,7 +298,7 @@ function draw() {
         console.log(min);
     }
 
-    // let this be toggled by clicking the mouse
+    // minute indicators toggled by clicking the mouse
     if (minute_indicators_on)
         draw_minute_indicators();
 
