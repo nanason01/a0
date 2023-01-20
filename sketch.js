@@ -74,7 +74,7 @@ class Cat {
     // this makes it such that the top left possible is 0, 0
     // and the bottom right possible is 800, 500
     #x_offset = -95;
-    #y_offset = -5;
+    #y_offset = 0;
 
     // hardcoding is a lot easier than bounds-checking on the poptart region
     #sprinkle_locations = [
@@ -160,7 +160,7 @@ class Cat {
         let erase_entire_trail = function(x, y) {
             stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
-            rect(x, y, 95, 100);
+            rect(x - 800, y, 895, 100);
             rect(x + 95, y, 30, 35);
             rect(x + 115, y + 35, 10, 5);
             rect(x + 120, y + 40, 5, 5);
@@ -176,7 +176,7 @@ class Cat {
         let clean_trail = function(x, y) {
             stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
-            rect(x, y, 90, 100);
+            rect(x - 800, y, 890, 100);
         }
 
         // extend trail
@@ -274,7 +274,7 @@ function draw() {
     // and I don't want to deal with any "time-passed-during-prog"-bugs
     const mil = millis();
     const sec = second();
-    const min = minute();
+    const min = 0; // minute();
     const hou = hour();
 
     // update annoying background at somewhat random intervals
