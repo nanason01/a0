@@ -74,7 +74,7 @@ class Cat {
     // this makes it such that the top left possible is 0, 0
     // and the bottom right possible is 800, 500
     #x_offset = -95;
-    #y_offset = 0;
+    #y_offset = -5;
 
     // hardcoding is a lot easier than bounds-checking on the poptart region
     #sprinkle_locations = [
@@ -158,6 +158,7 @@ class Cat {
 
         // erase existing trail
         let erase_entire_trail = function(x, y) {
+            stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
             rect(x, y, 95, 100);
             rect(x + 95, y, 30, 35);
@@ -173,6 +174,7 @@ class Cat {
 
         // clean up trail for extension
         let clean_trail = function(x, y) {
+            stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
             rect(x, y, 90, 100);
         }
@@ -330,7 +332,7 @@ function draw() {
     }
 
     // minutes along the y-axis
-    let y_pos = 500 - (minute() * 500 / 60);
+    let y_pos = 500 - (min * 500 / 60);
     translate(0, y_pos);
 
     // hours as sprinkles on the poptart
