@@ -1,16 +1,22 @@
-//
-// This is my annoying clock.
-//
-// The x position represents the seconds,
-// the y position the minutes (moving up each minute),
-// and the number of sprinkles is the hour.
-// The background color changes two times per second,
-// the cat oscillates once per second,
-// and I couldn't decide whether I liked the guidelines or not,
-// so you can click to enable minute indicators
-//
-// Author: Nicholas Anason (nda2125@columbia.edu)
-//
+docstring = `
+Welcome!
+
+This is my silly clock.
+
+The x position represents the seconds,
+the y position the minutes (moving up each minute),
+and the number of sprinkles is the hour.
+The background color changes two times per second,
+the cat oscillates once per second,
+and I couldn't decide whether I liked the guidelines or not,
+so you can click to enable minute indicators.
+It also flies in and out and the change of each minute.
+
+Enjoy!
+
+Author: Nicholas Anason (nda2125@columbia.edu)`
+
+console.log(docstring);
 
 class Color {
     constructor(r, g, b) {
@@ -169,7 +175,7 @@ class Cat {
         let curr_x = x - 30 + 40;
         let y_up = true;
         
-        // do while because we want to draw one past the left bound
+        // draw a bunch of trailing columns each time, then translate them
         for (
             let x_offset = 0, y_up = false; 
             x_offset < 800;
@@ -178,6 +184,7 @@ class Cat {
             draw_trail_col(x - 30 - x_offset, y + 5 + (y_up ? 5 : 0));
         }
 
+        // draw each sprinkle
         for (let sprinkle of this.#sprinkles) {
             sprinkle.draw(x, y);
         }
@@ -190,13 +197,18 @@ let cat;
 let background_color = background_colors.pop();
 let background_change_time = 0;
 
+// millis are runtime (drifting) and the others are wallclock (accurate)
+// time, however, millis make movement a lot more smooth, so compromise
+// by aggressively syncing the millisecond each second
+let prev_s_millis;
+let prev_s;
 let prev_m;
 let prev_h;
-let prev_m_millis;
 
 function setup() {
     createCanvas(800,600); // make an HTML canvas element width x height pixels
     
+    prev_s = second();
     prev_m = minute();
     prev_h = hour();
     
@@ -204,7 +216,7 @@ function setup() {
     cat.set_hour(prev_h);
     
     // roundabout way to make sure the first minute is accurately placed somewhat
-    prev_m_millis = -1000 * second();
+    prev_s_millis = 0;
 }
 
 let minute_indicators_on = false;
@@ -232,6 +244,7 @@ function draw() {
     // I don't trust that the clock doesn't drift with these
     // and I don't want to deal with any "time-passed-during-prog"-bugs
     const mil = millis();
+    const sec = second();
     const min = minute();
     const hou = hour();
 
@@ -246,10 +259,14 @@ function draw() {
     }
 	background(background_color.r, background_color.g, background_color.b);
 
+    // sync millis to wall clock
+    if (sec != prev_s) {
+        prev_s = sec;
+        prev_s_millis = mil;
+    }
+
     // log the new minute to console
-    // also sync millis to the new minute
     if (min != prev_m) {
-        prev_m_millis = mil;
         prev_m = min;
         console.log(min);
     }
@@ -263,8 +280,27 @@ function draw() {
     translate(0, y_offset);
 
     // seconds counting along x-axis
-    const minute_millis = mil - prev_m_millis;
-    translate(minute_millis * 800 / 60000, 0)
+    const minute_millis = mil - prev_s_millis + 1000 * sec;
+
+    // fly away in last 3 seconds and in in first 3 seconds
+    // The idea is to use a cosine wave to do smooth acceleration
+    // and decelleration
+    const smooth_position = minute_millis * 800 / 60000;
+    if (minute_millis < 3000) {
+        const tot_minut_millis = 3000 + minute_millis;
+        translate(smooth_position
+            - 200 * Math.cos(Math.PI * tot_minut_millis / 6000)
+            - 200,
+            0);
+    } else if (60000 - minute_millis < 3000) {
+        const rem_minute_millis = minute_millis - 57000;
+        translate(smooth_position
+            - 1000 * Math.cos(Math.PI * rem_minute_millis / 6000)
+            + 1000,
+            0);
+    } else {
+        translate(smooth_position, 0)
+    }
 
     // minutes along the y-axis
     let y_pos = 500 - (minute() * 500 / 60);
