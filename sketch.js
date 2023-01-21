@@ -158,7 +158,7 @@ class Cat {
 
         // erase existing trail
         let erase_entire_trail = function(x, y) {
-            stroke(background_color.r, background_color.g, background_color.b);
+            noStroke();
             fill(background_color.r, background_color.g, background_color.b);
             rect(x - 800, y, 895, 100);
             rect(x + 95, y, 30, 35);
