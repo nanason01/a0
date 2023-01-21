@@ -9,7 +9,7 @@ and the number of sprinkles and rainbow segments are the hour.
 The background color changes two times per second,
 the cat oscillates once per second,
 and I couldn't decide whether I liked the guidelines or not,
-so you can click to enable minute indicators.
+so you can click to enable rough minute indicators.
 It also flies in and out at the change of each minute.
 
 Enjoy!
@@ -174,14 +174,14 @@ class Cat {
 
         // clean up trail for extension
         let clean_trail = function(x, y) {
-            stroke(background_color.r, background_color.g, background_color.b);
+            noStroke();
             fill(background_color.r, background_color.g, background_color.b);
             rect(x - 800, y, 890, 100);
         }
 
         // extend trail
         let draw_trail_col = function(x, y) {
-	    noStroke();
+            noStroke();
             fill(red.r, red.g, red.b);
             rect(x, y, 40, 15);
             fill(orange.r, orange.g, orange.b);
@@ -195,7 +195,7 @@ class Cat {
             fill(purple.r, purple.g, purple.b);
             rect(x, y + 75, 40, 15);
         }
-        
+
         // draw a sprinkle for each hour
         for (let sprinkle of this.#sprinkles) {
             sprinkle.draw(x, y);
@@ -215,8 +215,8 @@ class Cat {
             let hou = 1; hou < this.#sprinkles.length; hou++) 
         {
             const x_offset = hou * 40;
-            const y_up = hou % 2 == 0;
-            draw_trail_col(x + 90 - x_offset, y + 5 + (y_up ? 5 : 0));
+            const y_down = hou % 2 == 0;
+            draw_trail_col(x + 90 - x_offset, y + 5 + (y_down ? 5 : 0));
         }
     }
 
