@@ -158,7 +158,7 @@ class Cat {
 
         // erase existing trail
         let erase_entire_trail = function(x, y) {
-            noStroke();
+            stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
             rect(x - 800, y, 895, 100);
             rect(x + 95, y, 30, 35);
@@ -174,9 +174,11 @@ class Cat {
 
         // clean up trail for extension
         let clean_trail = function(x, y) {
-            noStroke();
+            stroke(background_color.r, background_color.g, background_color.b);
             fill(background_color.r, background_color.g, background_color.b);
-            rect(x - 800, y, 890, 100);
+            rect(x - 800, y, 870, 100);
+            noStroke();
+            rect(x + 70, y, 20, 100);
         }
 
         // extend trail
